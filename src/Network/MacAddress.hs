@@ -7,10 +7,14 @@
 -- Maintainer  : Tom Lokhorst <tom@lokhorst.eu>
 -- Stability   : Experimental
 --
--- A sort of reusable module for mac addresses.
+-- A 'sort of' reusable module for mac addresses.
 --
 -------------------------------------------------------------------------------
-module Network.MacAddress where
+module Network.MacAddress
+  ( MacAddress (..)
+  , parse
+  , bytes
+  ) where
 
 import Data.List.Split
 import Data.Word
@@ -25,7 +29,7 @@ instance Show MacAddress where
     where
       colon = showString ":"
 
--- | Partial function to "parse" a `String` to a `MacAddr`
+-- | Partial function to "parse" a `String` to a `MacAddress`
 parse :: String -> MacAddress
 parse s =
     let parts = splitOn ":" s
