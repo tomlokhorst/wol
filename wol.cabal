@@ -25,7 +25,7 @@ cabal-version:       >= 1.6
 
 executable wol
   build-depends:     base >= 3 && < 5
-  main-is:           Wol.hs
+  main-is:           WoL.hs
   hs-source-dirs:    src
 
 library

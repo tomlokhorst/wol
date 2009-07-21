@@ -13,6 +13,7 @@
 module Network.WoL
   ( sendWoLMagicPacket
   , send
+  , magicPacket
   ) where
 
 import Network.MacAddress
