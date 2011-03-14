@@ -1,5 +1,5 @@
 name:                wol
-version:             0.1.0
+version:             0.1.1
 synopsis:            Send a Wake on LAN Magic Packet
 description:         A program and library to a send WoL Magic Packet, to
                      remotely start a computer.
@@ -13,6 +13,9 @@ description:         A program and library to a send WoL Magic Packet, to
                      Usage:
                      .
                      > $ wol hostname macaddress [portnumber]
+                     .
+                     If the hostname is not statically known, you can try using
+                     LAN broadcast (@255.255.255.255@).
 license:             BSD3
 license-file:        LICENSE
 author:              Tom Lokhorst
@@ -23,6 +26,10 @@ category:            Network
 build-type:          Simple
 cabal-version:       >= 1.6
 
+source-repository head
+  type:             git
+  location:         https://github.com/tomlokhorst/wol.git
+
 executable wol
   build-depends:     base >= 3 && < 5
   main-is:           WoL.hs
@@ -30,7 +37,7 @@ executable wol
 
 library
   build-depends:     base >= 3 && < 5,
-                     network >= 2.2.1 && < 2.3,
+                     network >= 2.3 && < 2.4,
                      split >= 0.1.1 && < 0.2
   hs-source-dirs:    src
   exposed-modules:   Network.WoL
