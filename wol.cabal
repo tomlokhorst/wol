@@ -1,5 +1,5 @@
 name:                wol
-version:             0.1.1
+version:             0.1.2
 synopsis:            Send a Wake on LAN Magic Packet
 description:         A program and library to a send WoL Magic Packet, to
                      remotely start a computer.
