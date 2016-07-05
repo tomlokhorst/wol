@@ -18,9 +18,10 @@ module Network.WoL
 
 import Network.MacAddress
 
-import Data.Char
+import qualified Data.ByteString as BS
 import Network.BSD
-import Network.Socket hiding (send)
+import Network.Socket hiding (send, sendTo, recv, recvFrom)
+import Network.Socket.ByteString hiding (send)
 
 -- | User friendly wrapper around `send` function.
 sendWoLMagicPacket :: String -> String -> Int -> IO ()
@@ -36,15 +37,15 @@ send host addr port = do
   s <- socket AF_INET Datagram udp
   setSocketOption s Broadcast 1
   let sockAddr = SockAddrInet port host
-  Network.Socket.sendTo s (magicPacket addr) sockAddr
+  sendTo s (magicPacket addr) sockAddr
   sClose s
 
 -- | Construct a magic packet based on `MacAddress`.
-magicPacket :: MacAddress -> String
+magicPacket :: MacAddress -> BS.ByteString
 magicPacket addr =
-  let prefix = replicate 6 '\255'
-      addr'  = map (chr . fromIntegral) (bytes addr)
-  in prefix ++ concat (replicate 16 addr')
+  let prefix = replicate 6 $ fromIntegral 255
+      addr'  = bytes addr
+  in BS.pack $ prefix ++ concat (replicate 16 addr')
 
 udp :: ProtocolNumber
 udp = 17

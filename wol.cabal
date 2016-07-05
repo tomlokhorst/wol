@@ -37,8 +37,9 @@ executable wol
 
 library
   build-depends:     base >= 3 && < 5,
-                     network >= 2.3 && < 2.4,
-                     split >= 0.1.1 && < 0.2
+                     network,
+                     split,
+                     bytestring
   hs-source-dirs:    src
   exposed-modules:   Network.WoL
                      Network.MacAddress
