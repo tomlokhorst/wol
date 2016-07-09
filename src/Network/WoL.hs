@@ -22,6 +22,13 @@ import qualified Data.ByteString as BS
 import Network.BSD
 import Network.Socket hiding (send, sendTo, recv, recvFrom)
 import Network.Socket.ByteString hiding (send)
+import Control.Exception
+
+data ParseError = ParseError String
+  deriving Show
+
+instance Exception ParseError where
+  displayException (ParseError s) = "ParseError: " ++ s
 
 -- | User friendly wrapper around `send` function.
 sendWoLMagicPacket :: String -> String -> Int -> IO ()
@@ -29,7 +36,9 @@ sendWoLMagicPacket host addr port = do
   he <- getHostByName host
   let ha = hostAddress he
       ma = parse addr
-  send ha ma (fromIntegral port)
+  case ma of
+    Left err -> throw (ParseError err)
+    Right mm -> send ha mm (fromIntegral port)
 
 -- | Send a magic packet to the specified location.
 send :: HostAddress -> MacAddress -> PortNumber -> IO ()
