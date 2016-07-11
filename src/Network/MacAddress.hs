@@ -19,6 +19,7 @@ module Network.MacAddress
 import Data.List.Split
 import Data.Word
 import Numeric
+import Control.Monad
 
 data MacAddress = MacAddress Word8 Word8 Word8 Word8 Word8 Word8
 
@@ -30,14 +31,20 @@ instance Show MacAddress where
       colon = showString ":"
 
 -- | Partial function to "parse" a `String` to a `MacAddress`
-parse :: String -> MacAddress
-parse s =
-    let parts = splitOn ":" s
-        words = map (fst . head . readHex) parts
-    in if length words /= 6
-       then error $ "Network.MacAddress.parse: malformed MacAddress '" ++ s ++ "'"
-       else MacAddress (words !! 0) (words !! 1) (words !! 2)
-                       (words !! 3) (words !! 4) (words !! 5)
+parse :: String -> Either String MacAddress
+parse s = if length parts /= 6
+          then Left "length of parts /= 6"
+          else foldM func [] parts >>= \w ->
+               return $ MacAddress (w !! 0) (w !! 1) (w !! 2)
+                                   (w !! 3) (w !! 4) (w !! 5)
+  where
+    parts = splitOn ":" s
+    func h l = case readHex l of
+                 []      -> Left $ l ++ " is not a hex number"
+                 [(a,b)] -> if null b && a <= 0xff
+                            then return $ h ++ [fromIntegral a]
+                            else Left $ l ++
+                                        " is not a hex number or out of range"
 
 -- | Get all bytes in a mac address
 bytes :: MacAddress -> [Word8]
