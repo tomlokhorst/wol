@@ -38,7 +38,7 @@ send host addr port = do
   setSocketOption s Broadcast 1
   let sockAddr = SockAddrInet port host
   sendTo s (magicPacket addr) sockAddr
-  sClose s
+  close s
 
 -- | Construct a magic packet based on `MacAddress`.
 magicPacket :: MacAddress -> BS.ByteString
